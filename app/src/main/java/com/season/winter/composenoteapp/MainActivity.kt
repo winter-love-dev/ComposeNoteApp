@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.season.winter.composenoteapp.ui.theme.ComposeNoteAppTheme
+import com.season.winter.composenoteapp.compose.ui.theme.ComposeNoteAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

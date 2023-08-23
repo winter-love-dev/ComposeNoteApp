@@ -1,4 +1,4 @@
-package com.season.winter.composenoteapp.ui.theme
+package com.season.winter.composenoteapp.compose.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
