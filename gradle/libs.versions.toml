@@ -1,13 +1,41 @@
 [versions]
+minSdk = "24"
+targetSdk = "34"
+compileSdk = "34"
+versionCode = "1"
+versionName = "1.0.0"
+
 agp = "8.1.0"
-org-jetbrains-kotlin-android = "1.8.10"
-core-ktx = "1.9.0"
+core-ktx = "1.10.1"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.2"
 compose-bom = "2023.03.00"
+
+androidx-activity-ktx = "1.7.2"
+androidx-lifecycle-runtime-ktx = "2.6.1"
+androidx-lifecycle-viewmodel-ktx = "2.6.1"
+androidx-fragment-ktx = "1.6.1"
+
+androidx-room = "2.5.2"
+
+com-google-dagger-hilt-android-plugins = "2.44"
+com-google-dagger-hilt-android = "2.46.1"
+com-google-dagger-hilt-compiler = "2.44" # kapt
+
+com-google-devtools-ksp = "1.8.10-1.0.9"
+
+org-jetbrains-kotlin-android = "1.8.10"
+
+
+[plugins]
+com-android-application = { id = "com.android.application", version.ref = "agp" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "org-jetbrains-kotlin-android" }
+dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "com-google-dagger-hilt-android-plugins" }
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "com-google-devtools-ksp" }
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -24,10 +52,61 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
-
-[plugins]
-com-android-application = { id = "com.android.application", version.ref = "agp" }
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity-ktx" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" } # ksp
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" } # ksp
+androidx-room-compiler-annotationProcessor = { module = "androidx.room:room-compiler", version.ref = "androidx-room" } # annotationProcessor
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "androidx-room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" } # ksp
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
+com-google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "com-google-dagger-hilt-android" }
+com-google-dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "com-google-dagger-hilt-compiler" } # kapt
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidx-fragment-ktx" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle-viewmodel-ktx" }
 
 [bundles]
+default = [
+    "core-ktx",
+    "material3",
+    "lifecycle-runtime-ktx",
+    "androidx-lifecycle-viewmodel-ktx"
+]
+default-bom = [
+    "compose-bom",
+]
+default-components = [
+    "androidx-activity-ktx",
+    "androidx-fragment-ktx",
+    "activity-compose",
+]
+compose = [
+    "ui",
+    "ui-graphics",
+    "ui-tooling-preview",
+]
+test = [
+    "junit"
+]
+android-test = [
+    "androidx-test-ext-junit",
+    "espresso-core",
+    "ui-test-junit4"
+]
+debug = [
+    "ui-tooling",
+    "ui-test-manifest",
+]
+room-compiler-annotationProcessor = [ "androidx-room-compiler-annotationProcessor" ]
+room-compiler-kapt = [ "androidx-room-compiler" ]
+room-compiler-ksp = [ "androidx-room-compiler" ]
+room-testing-testImplementation = [ "androidx-room-testing" ]
+room = [
+    "androidx-room-runtime",
+    "androidx-room-paging",
+    "androidx-room-ktx"
+]
+hilt = [
+    "com-google-dagger-hilt-android",
+]
+hilt-compiler-kapt = [ "com-google-dagger-hilt-compiler" ]
 
