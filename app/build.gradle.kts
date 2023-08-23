@@ -2,18 +2,22 @@
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.dagger.hilt)
 }
 
 android {
     namespace = "com.season.winter.composenoteapp"
-    compileSdk = 33
+//    compileSdk = 33
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.season.winter.composenoteapp"
-        minSdk = 24
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -31,11 +35,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
     buildFeatures {
         compose = true
@@ -52,19 +56,29 @@ android {
 
 dependencies {
 
-    implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.activity.compose)
+    implementation(libs.bundles.default)
+    implementation(libs.bundles.default.components)
+    implementation(libs.bundles.compose)
     implementation(platform(libs.compose.bom))
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+
+    testImplementation(libs.bundles.test)
+
+    androidTestImplementation(libs.bundles.android.test)
     androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
+
+    debugImplementation(libs.bundles.debug)
+
+    // hilt
+    implementation(libs.bundles.hilt)
+    kapt(libs.bundles.hilt.compiler.kapt)
+
+    // room
+    ksp(libs.bundles.room.compiler.ksp)
+    annotationProcessor(libs.bundles.room.compiler.annotationProcessor)
+    testImplementation(libs.bundles.room.testing.testImplementation)
+    implementation(libs.bundles.room)
+}
+
+kapt {
+    correctErrorTypes = true
 }
