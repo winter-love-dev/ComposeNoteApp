@@ -12,8 +12,10 @@ androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.2"
-navigation-compose = "2.7.0"
+navigation-compose = "2.7.1"
+foundation-compose = "1.5.0"
 compose-bom = "2023.08.00"
+
 material3 = "1.1.1"
 
 androidx-activity-ktx = "1.7.2"
@@ -49,6 +51,7 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
+foundation-compose = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
@@ -91,6 +94,7 @@ compose = [
     "ui-tooling-preview",
     "navigation-compose",
     "androidx-lifecycle-viewmodel-ktx",
+    "foundation-compose",
 ]
 test = [
     "junit"

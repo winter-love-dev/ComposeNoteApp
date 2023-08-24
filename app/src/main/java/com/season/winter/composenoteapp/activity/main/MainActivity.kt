@@ -6,42 +6,55 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.season.winter.composenoteapp.compose.ui.CustomTextField
+import com.season.winter.composenoteapp.compose.ui.CustomNoteCard
+import com.season.winter.composenoteapp.compose.ui.CustomNoteEditor
 import com.season.winter.composenoteapp.compose.ui.theme.ComposeNoteAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 @ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
 
-    val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
+            val listState = rememberLazyStaggeredGridState()
+            val coroutineScope = rememberCoroutineScope()
+
+            val (text, setText) = remember {
+                mutableStateOf("")
+            }
+            var isEditMode by remember {
+                mutableStateOf(false)
+            }
+            var editTargetIndex by remember {
+                mutableIntStateOf(0)
+            }
             Scaffold(
                 content = { scaffoldPadding ->
                     Column(
@@ -51,8 +64,52 @@ class MainActivity : ComponentActivity() {
                         ,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        CustomTextField {
-                            // add list ...
+                        CustomNoteEditor(
+                            defaultValue = text,
+//                            isEditMode = isEditMode,
+//                            editValue = viewModel.noteList[editTargetIndex].content,
+//                            onEditSubmit = {
+//                                viewModel.editNote(editTargetIndex, it)
+//                                setText("")
+//                            },
+//                            onClickCancelEdit = {  },
+                            onSubmit = {
+                                viewModel.addNote(it)
+                                setText("")
+                                coroutineScope.launch {
+                                    listState.animateScrollToItem(
+                                        index = viewModel.scrollTopPosition.value
+                                    )
+                                }
+                            }
+                        )
+                        LazyVerticalStaggeredGrid(
+                            state = listState,
+                            modifier = Modifier.fillMaxWidth(),
+                            columns = StaggeredGridCells.Fixed(2),
+                            reverseLayout = true,
+                            contentPadding = PaddingValues(16.dp),
+                            verticalItemSpacing = 16.dp,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(viewModel.defaultStaggeredGridSpaceCount) {
+                                Spacer(modifier = Modifier.height(10.dp))
+                            }
+                            items(viewModel.noteList.size) { index ->
+                                val item = viewModel.noteList[index]
+                                CustomNoteCard(
+                                    content = item.content,
+                                    onClickItem = {
+                                        setText(item.content)
+                                        isEditMode = true
+                                        editTargetIndex = index
+                                    },
+                                    onClickDelete = {
+                                        viewModel.removeNote(item)
+                                        isEditMode = false
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -61,10 +118,39 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun MainActivityPreview() {
+    ComposeNoteAppTheme {
+//        ImageCard()
+    }
+}
+
 
 /**
  * 학습 했던거 잠깐 기록 용으로 남겨두는 주석들
  */
+
+/*
+    LazyColumn(
+        state = listState,
+        modifier = Modifier.fillMaxWidth(),
+        reverseLayout = true,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(viewModel.inputTextValue.size) { index ->
+            CustomNoteCard(
+                note = viewModel.inputTextValue[index],
+                onClickItem = {
+                    setEditorText(it.content)
+                },
+                onClickDelete = {
+                    viewModel.removeNote(it)
+                }
+            )
+        }
+    }*/
 
 //@Preview(showBackground = true)
 //@Composable
@@ -126,7 +212,7 @@ fun ImageCard(
                         onTabFavorite(isFavorite.not())
                     }
                 ) {
-                    Icon(
+                        Icon(
                         imageVector =
                             if (isFavorite)
                                 Icons.Default.Favorite
