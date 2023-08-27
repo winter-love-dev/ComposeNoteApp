@@ -14,20 +14,19 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.season.winter.composenoteapp.compose.ui.theme.ComposeNoteAppTheme
@@ -35,33 +34,22 @@ import com.season.winter.composenoteapp.compose.ui.theme.ComposeNoteAppTheme
 @Composable
 @ExperimentalComposeUiApi
 fun CustomNoteEditor(
-    modifier: Modifier = Modifier
-        .wrapContentHeight()
-        .fillMaxWidth()
-        .padding(16.dp)
-    ,
-    keyboardController: SoftwareKeyboardController? =
-        LocalSoftwareKeyboardController.current,
+    modifier: Modifier = Modifier,
     defaultValue: String = "",
-//    isEditMode: Boolean = false,
-//    editValue: String = "",
-//    onEditSubmit: (String) -> Unit = { },
-//    onClickCancelEdit: (String) -> Unit = { },
+    isEditMode: Boolean = false,
     hideKeyboardToSubmit: Boolean = false,
+    onDeleteAll: () -> Unit = { },
     onSubmit: (String) -> Unit = { },
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     val (inputValue, setInputValue) = remember {
         mutableStateOf(defaultValue)
     }
-//    var setEditValue by remember {
-//        mutableStateOf(false)
-//    }
-//    if (isEditMode && setEditValue.not()) {
-//        setEditValue = true
-//        setInputValue(editValue)
-//    }
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+            .padding(16.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 7.dp
@@ -85,9 +73,6 @@ fun CustomNoteEditor(
                                 keyboardController?.hide()
 
                             if (inputValue.isNotEmpty()) {
-//                                if (isEditMode)
-//                                    onEditSubmit(inputValue)
-//                                else
                                     onSubmit(inputValue)
                                 setInputValue("")
                             }
@@ -95,9 +80,9 @@ fun CustomNoteEditor(
                     ) {
                         Icon(
                             imageVector =
-//                                if (isEditMode)
-//                                    Icons.Default.Edit
-//                                else
+                                if (isEditMode)
+                                    Icons.Default.Edit
+                                else
                                     Icons.Default.Send,
                             contentDescription = "submit or submit edit button"
                         )
@@ -109,6 +94,23 @@ fun CustomNoteEditor(
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
+                if (isEditMode) {
+                    Spacer(modifier = Modifier)
+                }
+                else {
+                    Button(
+                        onClick = {
+                            if (inputValue.isNotEmpty())
+                                setInputValue("")
+                            onDeleteAll()
+                        }
+                    ) {
+                        Text(
+                            "Delete All"
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.weight(1f))
                 IconButton(
                     onClick = { keyboardController?.hide() }
                 ) {
@@ -117,7 +119,6 @@ fun CustomNoteEditor(
                         contentDescription = "keyboard down button"
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
                 IconButton(
                     onClick = {
                         if (inputValue.isNotEmpty())
@@ -125,11 +126,7 @@ fun CustomNoteEditor(
                     }
                 ) {
                     Icon(
-                        imageVector =
-//                            if (isEditMode)
-//                                Icons.Default.Close
-//                            else
-                                Icons.Default.Delete,
+                        imageVector = Icons.Default.Delete,
                         contentDescription = "text clear button"
                     )
                 }

@@ -3,7 +3,6 @@ package com.season.winter.composenoteapp.activity.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,10 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,8 +28,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.season.winter.composenoteapp.activity.main.MainViewModel.Companion.defaultStaggeredGridSpaceCount
 import com.season.winter.composenoteapp.compose.ui.CustomNoteCard
 import com.season.winter.composenoteapp.compose.ui.CustomNoteEditor
+import com.season.winter.composenoteapp.compose.ui.EditDialog
 import com.season.winter.composenoteapp.compose.ui.theme.ComposeNoteAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -38,91 +42,100 @@ import kotlinx.coroutines.launch
 @ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: MainViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val listState = rememberLazyStaggeredGridState()
-            val coroutineScope = rememberCoroutineScope()
-
-            val (text, setText) = remember {
-                mutableStateOf("")
-            }
-            var isEditMode by remember {
-                mutableStateOf(false)
-            }
-            var editTargetIndex by remember {
-                mutableIntStateOf(0)
-            }
             Scaffold(
                 content = { scaffoldPadding ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(scaffoldPadding)
-                        ,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        CustomNoteEditor(
-                            defaultValue = text,
-//                            isEditMode = isEditMode,
-//                            editValue = viewModel.noteList[editTargetIndex].content,
-//                            onEditSubmit = {
-//                                viewModel.editNote(editTargetIndex, it)
-//                                setText("")
-//                            },
-//                            onClickCancelEdit = {  },
-                            onSubmit = {
-                                viewModel.addNote(it)
-                                setText("")
-                                coroutineScope.launch {
-                                    listState.animateScrollToItem(
-                                        index = viewModel.scrollTopPosition.value
-                                    )
-                                }
-                            }
-                        )
-                        LazyVerticalStaggeredGrid(
-                            state = listState,
-                            modifier = Modifier.fillMaxWidth(),
-                            columns = StaggeredGridCells.Fixed(2),
-                            reverseLayout = true,
-                            contentPadding = PaddingValues(16.dp),
-                            verticalItemSpacing = 16.dp,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(viewModel.defaultStaggeredGridSpaceCount) {
-                                Spacer(modifier = Modifier.height(10.dp))
-                            }
-                            items(viewModel.noteList.size) { index ->
-                                val item = viewModel.noteList[index]
-                                CustomNoteCard(
-                                    content = item.content,
-                                    onClickItem = {
-                                        setText(item.content)
-                                        isEditMode = true
-                                        editTargetIndex = index
-                                    },
-                                    onClickDelete = {
-                                        viewModel.removeNote(item)
-                                        isEditMode = false
-                                    }
-                                )
-                            }
-                        }
-                    }
+                    MainActivityScreen(scaffoldPadding)
                 }
             )
         }
     }
 }
 
+@Composable
+@ExperimentalComposeUiApi
+fun MainActivityScreen(
+    paddingValues: PaddingValues = PaddingValues.Absolute(),
+    viewModel: MainViewModel = viewModel()
+) {
+    val listState = rememberLazyStaggeredGridState()
+    val coroutineScope = rememberCoroutineScope()
+    val noteList by viewModel.noteListFlow.collectAsStateWithLifecycle(
+        initialValue = emptyList()
+    )
+    var editNotePositionForDialog by remember { mutableStateOf<Int?>(null) }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+        ,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        CustomNoteEditor(
+            onSubmit = {
+                viewModel.addNote(it)
+            },
+            onDeleteAll = {
+                viewModel.removeAllNote()
+            }
+        )
+        LazyVerticalStaggeredGrid(
+            state = listState,
+            modifier = Modifier.fillMaxWidth(),
+            columns = StaggeredGridCells.Fixed(2),
+            contentPadding = PaddingValues(16.dp),
+            verticalItemSpacing = 16.dp,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(noteList.size) { index ->
+                val item = noteList[index]
+                CustomNoteCard(
+                    content = item.content,
+                    onClickItem = {
+                        editNotePositionForDialog = index
+                    },
+                    onClickDelete = {
+                        viewModel.removeNote(item)
+                    }
+                )
+            }
+            items(defaultStaggeredGridSpaceCount) {
+                Spacer(modifier = Modifier.height(60.dp))
+            }
+            coroutineScope.launch {
+                listState.animateScrollToItem(index = 0)
+            }
+        }
+    }
+    if (editNotePositionForDialog != null) {
+        fun dismiss() {
+            editNotePositionForDialog = null
+        }
+        val position = editNotePositionForDialog ?: return
+        val content = noteList[position].content
+        val id = noteList[position].id
+        EditDialog(
+            onDismissRequest = { dismiss() },
+            onConfirmation = { dismiss() },
+            dialogTitle = "Edit Note",
+            icon = Icons.Default.Info,
+            noteContent = content,
+            onEdit = { noteContent ->
+                viewModel.editNote(id, noteContent)
+                dismiss()
+            }
+        )
+    }
+}
+
 @Preview(showBackground = true)
+@ExperimentalComposeUiApi
 @Composable
 fun MainActivityPreview() {
     ComposeNoteAppTheme {
-//        ImageCard()
+        MainActivityScreen()
     }
 }
 

@@ -26,10 +26,7 @@ import com.season.winter.composenoteapp.model.NoteEntity
 private val defaultModifier = Modifier
     .wrapContentHeight()
     .wrapContentWidth()
-    .padding(
-        top = 6.dp,
-        bottom = 6.dp
-    )
+
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,6 +36,11 @@ fun CustomNoteCard(
     onClickItem: () -> Unit = {  },
     onClickDelete: () -> Unit = {  }
 ) {
+    modifier
+        .padding(
+            top = 6.dp,
+            bottom = 6.dp
+        )
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
@@ -79,14 +81,6 @@ fun CustomNoteCard(
 fun CustomNoteCardPreview() {
     ComposeNoteAppTheme {
         val text = "aasda aasda aasda aasda sd asd asd asda sd asd a asa as as a aasa s as  asa s"
-        CustomNoteCard(
-            content = text,
-            onClickItem = {
-
-            },
-            onClickDelete = {
-
-            }
-        )
+        CustomNoteCard(content = text)
     }
 }
