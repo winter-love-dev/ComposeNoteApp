@@ -1,53 +1,60 @@
 package com.season.winter.composenoteapp.activity.main
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.season.winter.composenoteapp.model.NoteEntity
+import com.season.winter.composenoteapp.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-
+    private val noteRepository: NoteRepository
 ): ViewModel() {
 
-    var noteList = mutableStateListOf<NoteEntity>()
-        private set
-
-    // position
-    val defaultStaggeredGridSpaceCount = 10
-    private val _scrollTopPosition = mutableIntStateOf(defaultStaggeredGridSpaceCount)
-    val scrollTopPosition: State<Int> = _scrollTopPosition
+    val noteListFlow: Flow<List<NoteEntity>> =
+        noteRepository.getNotes()
 
     fun addNote(text: String) {
         val note = NoteEntity(
             content = text
         )
-        noteList.add(note)
-        setScrollTopPosition()
+        viewModelScope.launch {
+            noteRepository.addNote(note)
+        }
     }
 
-    private fun setScrollTopPosition() {
-        _scrollTopPosition.intValue =
-            noteList.size + defaultStaggeredGridSpaceCount
+    fun getScrollTopPosition(
+        listSize: Int,
+        onPosition: (topPosition: Int) -> Unit
+    ) {
+        val topPosition = listSize + defaultStaggeredGridSpaceCount
+        onPosition(topPosition)
     }
 
     fun removeNote(note: NoteEntity) {
-        noteList.remove(note)
+        viewModelScope.launch {
+            noteRepository.removeNote(note)
+        }
     }
 
-    fun editNote(index: Int, text: String) {
-        val note = NoteEntity(
-            content = text
-        )
-        noteList[index] = note
+    fun removeAllNote() {
+        viewModelScope.launch {
+            noteRepository.removeAllNote()
+        }
+    }
+
+    fun editNote(id: Long, text: String) {
+        viewModelScope.launch {
+            noteRepository.editNote(id, text)
+        }
+    }
+
+    companion object {
+
+        // position
+        const val defaultStaggeredGridSpaceCount = 10
     }
 }
