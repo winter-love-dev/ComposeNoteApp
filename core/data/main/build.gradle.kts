@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.season.winter.feature.main"
+    namespace = "com.season.winter.core.data.main"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -34,29 +34,18 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerExtensionVersion.get()
-    }
-
 }
 
 dependencies {
 
-    implementation(project(":core:design:ui"))
     implementation(project(":core:domain:main"))
 
     implementation(libs.bundles.default)
     implementation(libs.bundles.default.components)
-    implementation(libs.bundles.compose)
-    implementation(platform(libs.compose.bom))
 
     testImplementation(libs.bundles.test)
 
     androidTestImplementation(libs.bundles.android.test)
-    androidTestImplementation(platform(libs.compose.bom))
 
     debugImplementation(libs.bundles.debug)
 

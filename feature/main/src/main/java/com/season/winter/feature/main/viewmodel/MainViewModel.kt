@@ -3,7 +3,7 @@ package com.season.winter.feature.main.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.season.winter.core.domain.note.NoteRepository
+import com.season.winter.core.main.NoteRepository
 import com.season.winter.feature.main.model.NoteItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -52,7 +52,7 @@ class MainViewModel @Inject constructor(
     val showEdit: SharedFlow<NoteItem> get() = _showEdit.asSharedFlow()
 
     fun addNote(text: String) = viewModelScope.launch {
-        val note = com.season.winter.core.domain.note.model.NoteInfoEntity(
+        val note = com.season.winter.core.main.model.NoteInfoEntity(
             content = text,
             id = -1,
         )

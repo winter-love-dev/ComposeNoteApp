@@ -56,9 +56,9 @@ android {
 dependencies {
 
     implementation(project(":core:common"))
-    implementation(project(":core:data"))
+    implementation(project(":core:data:main"))
     implementation(project(":core:design:ui"))
-    implementation(project(":core:domain"))
+    implementation(project(":core:domain:main"))
     implementation(project(":feature:main"))
 
     implementation(libs.bundles.default)
