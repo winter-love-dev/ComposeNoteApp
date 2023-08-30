@@ -1,10 +1,9 @@
-package com.season.winter.composenoteapp.data
+package com.season.winter.composenoteapp.database.note
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.season.winter.composenoteapp.database.note.NoteEntity
 import kotlinx.coroutines.flow.Flow
 
 
@@ -22,6 +21,9 @@ interface NoteDatabaseDao {
 
     @Delete
     suspend fun removeNote(note: NoteEntity)
+
+    @Query("DELETE FROM note_entity WHERE id = :id")
+    suspend fun removeNote(id: Long)
 
     @Query("DELETE FROM note_entity")
     suspend fun removeAllNote()

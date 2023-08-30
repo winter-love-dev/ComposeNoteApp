@@ -1,144 +1,78 @@
-package com.season.winter.composenoteapp.activity.main
+package com.season.winter.composenoteapp.features.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.Text
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.season.winter.composenoteapp.activity.main.MainViewModel.Companion.defaultStaggeredGridSpaceCount
-import com.season.winter.composenoteapp.compose.ui.CustomNoteCard
-import com.season.winter.composenoteapp.compose.ui.CustomNoteEditor
-import com.season.winter.composenoteapp.compose.ui.EditDialog
-import com.season.winter.composenoteapp.compose.ui.theme.ComposeNoteAppTheme
+import com.season.winter.composenoteapp.features.main.compose.MainActivityScreen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import tech.thdev.compose.extensions.keyboard.state.MutableExKeyboardStateSource
+import tech.thdev.compose.extensions.keyboard.state.foundation.removeFocusWhenKeyboardIsHidden
+import tech.thdev.compose.extensions.keyboard.state.localowners.LocalMutableExKeyboardStateSourceOwner
 
 @AndroidEntryPoint
 @ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
 
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Scaffold(
-                content = { scaffoldPadding ->
-                    MainActivityScreen(scaffoldPadding)
-                }
+            val noteList by viewModel.noteListFlow.collectAsStateWithLifecycle(
+                initialValue = emptyList()
             )
-        }
-    }
-}
-
-@Composable
-@ExperimentalComposeUiApi
-fun MainActivityScreen(
-    paddingValues: PaddingValues = PaddingValues.Absolute(),
-    viewModel: MainViewModel = viewModel()
-) {
-    val listState = rememberLazyStaggeredGridState()
-    val coroutineScope = rememberCoroutineScope()
-    val noteList by viewModel.noteListFlow.collectAsStateWithLifecycle(
-        initialValue = emptyList()
-    )
-    var editNotePositionForDialog by remember { mutableStateOf<Int?>(null) }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-        ,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        CustomNoteEditor(
-            onSubmit = {
-                viewModel.addNote(it)
-            },
-            onDeleteAll = {
-                viewModel.removeAllNote()
+            val noteIsNotEmpty by remember(noteList.size) {
+                mutableStateOf(noteList.isNotEmpty())
             }
-        )
-        LazyVerticalStaggeredGrid(
-            state = listState,
-            modifier = Modifier.fillMaxWidth(),
-            columns = StaggeredGridCells.Fixed(2),
-            contentPadding = PaddingValues(16.dp),
-            verticalItemSpacing = 16.dp,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(noteList.size) { index ->
-                val item = noteList[index]
-                CustomNoteCard(
-                    content = item.content,
-                    onClickItem = {
-                        editNotePositionForDialog = index
+
+            CompositionLocalProvider(
+                LocalMutableExKeyboardStateSourceOwner provides MutableExKeyboardStateSource(),
+            ) {
+                Scaffold(
+                    floatingActionButton = {
+                        Button(
+                            enabled = noteIsNotEmpty,
+                            onClick = {
+                                viewModel.removeAllNote()
+                            },
+                            modifier = Modifier
+                                .padding(start = 10.dp, end = 10.dp, top = 10.dp)
+                        ) {
+                            Text(
+                                "Clear all"
+                            )
+                        }
                     },
-                    onClickDelete = {
-                        viewModel.removeNote(item)
+                    modifier = Modifier
+                        .removeFocusWhenKeyboardIsHidden()
+                ) { scaffoldPadding ->
+                    Box(
+                        modifier = Modifier
+                            .padding(scaffoldPadding)
+                    ) {
+                        MainActivityScreen(
+                            noteList = noteList,
+                        )
                     }
-                )
-            }
-            items(defaultStaggeredGridSpaceCount) {
-                Spacer(modifier = Modifier.height(60.dp))
-            }
-            coroutineScope.launch {
-                listState.animateScrollToItem(index = 0)
+                }
             }
         }
     }
-    if (editNotePositionForDialog != null) {
-        fun dismiss() {
-            editNotePositionForDialog = null
-        }
-        val position = editNotePositionForDialog ?: return
-        val content = noteList[position].content
-        val id = noteList[position].id
-        EditDialog(
-            onDismissRequest = { dismiss() },
-            onConfirmation = { dismiss() },
-            dialogTitle = "Edit Note",
-            icon = Icons.Default.Info,
-            noteContent = content,
-            onEdit = { noteContent ->
-                viewModel.editNote(id, noteContent)
-                dismiss()
-            }
-        )
-    }
 }
-
-@Preview(showBackground = true)
-@ExperimentalComposeUiApi
-@Composable
-fun MainActivityPreview() {
-    ComposeNoteAppTheme {
-        MainActivityScreen()
-    }
-}
-
 
 /**
  * 학습 했던거 잠깐 기록 용으로 남겨두는 주석들

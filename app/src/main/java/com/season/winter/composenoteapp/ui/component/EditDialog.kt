@@ -1,10 +1,15 @@
-package com.season.winter.composenoteapp.compose.ui
+package com.season.winter.composenoteapp.ui.component
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -16,8 +21,14 @@ fun EditDialog(
     noteContent: String,
     onEdit: (noteContent: String) -> Unit,
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
 ) {
+    var valueChange by remember {
+        mutableStateOf(noteContent)
+    }
+    val diffValue by remember {
+        derivedStateOf { valueChange != noteContent }
+    }
+
     AlertDialog(
         icon = {
             Icon(icon, contentDescription = "Example Icon")
@@ -26,16 +37,28 @@ fun EditDialog(
             Text(text = dialogTitle)
         },
         text = {
-            CustomNoteEditor(
+            CardNoteTextField(
                 isEditMode = true,
-                defaultValue = noteContent,
+                value = valueChange,
+                onValueChange = {
+                    valueChange = it
+                },
                 onSubmit = { onEdit(it) },
             )
+        },
+        confirmButton = {
+            TextButton(
+                enabled = diffValue,
+                onClick = {
+                    onEdit(valueChange)
+                }
+            ) {
+                Text("Update")
+            }
         },
         onDismissRequest = {
             onDismissRequest()
         },
-        confirmButton = { },
         dismissButton = {
             TextButton(
                 onClick = {

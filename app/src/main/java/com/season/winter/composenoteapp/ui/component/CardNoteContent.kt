@@ -1,4 +1,4 @@
-package com.season.winter.composenoteapp.compose.ui
+package com.season.winter.composenoteapp.ui.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,48 +20,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.season.winter.composenoteapp.compose.ui.theme.ComposeNoteAppTheme
-import com.season.winter.composenoteapp.model.NoteEntity
-
-private val defaultModifier = Modifier
-    .wrapContentHeight()
-    .wrapContentWidth()
-
+import com.season.winter.composenoteapp.ui.theme.ComposeNoteAppTheme
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun CustomNoteCard(
-    modifier: Modifier = defaultModifier,
+fun CardNoteContent(
+    modifier: Modifier = Modifier,
     content: String,
-    onClickItem: () -> Unit = {  },
-    onClickDelete: () -> Unit = {  }
+    onClickItem: () -> Unit = { },
+    onClickDelete: () -> Unit = { }
 ) {
-    modifier
-        .padding(
-            top = 6.dp,
-            bottom = 6.dp
-        )
     Card(
-        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 7.dp
         ),
-        onClick = { onClickItem() }
+        onClick = { onClickItem() },
+        modifier = modifier
+            .padding(
+                vertical = 6.dp,
+            )
+            .wrapContentWidth()
+            .wrapContentHeight()
     ) {
         Column(
             modifier = Modifier
-                .wrapContentHeight()
                 .fillMaxWidth()
+                .wrapContentHeight()
                 .padding(16.dp)
-            ,
         ) {
             Text(
                 text = content
             )
             Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.BottomEnd
+                contentAlignment = Alignment.BottomEnd,
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
                 IconButton(
                     onClick = { onClickDelete() }
@@ -78,9 +72,9 @@ fun CustomNoteCard(
 
 @Preview(showBackground = true)
 @Composable
-fun CustomNoteCardPreview() {
+internal fun PreviewCardNoteContent() {
     ComposeNoteAppTheme {
         val text = "aasda aasda aasda aasda sd asd asd asda sd asd a asa as as a aasa s as  asa s"
-        CustomNoteCard(content = text)
+        CardNoteContent(content = text)
     }
 }

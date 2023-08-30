@@ -1,4 +1,4 @@
-package com.season.winter.composenoteapp.model
+package com.season.winter.composenoteapp.database.note
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

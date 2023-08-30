@@ -1,25 +1,19 @@
-package com.season.winter.composenoteapp.database
+package com.season.winter.composenoteapp.database.note
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.season.winter.composenoteapp.constants.DatabaseName_Note
-import com.season.winter.composenoteapp.data.NoteDatabaseDao
-import com.season.winter.composenoteapp.model.NoteEntity
 
 @Database(
     entities = [
         NoteEntity::class,
-        // SomeOtherDataClass::class,
     ],
     version = 1,
     exportSchema = false
 )
-//@TypeConverters(SomeConverter::class)
-abstract class NoteDatabase: RoomDatabase() {
+abstract class NoteDatabase : RoomDatabase() {
 
     abstract fun noteDao(): NoteDatabaseDao
 
@@ -40,14 +34,6 @@ abstract class NoteDatabase: RoomDatabase() {
                 NoteDatabase::class.java,
                 DatabaseName_Note
             )
-//                .addTypeConverter(RemoteConfigConverters)
-                .addCallback(
-                    object : RoomDatabase.Callback() {
-                        override fun onCreate(db: SupportSQLiteDatabase) {
-                            super.onCreate(db)
-                        }
-                    }
-                )
                 .build()
         }
 

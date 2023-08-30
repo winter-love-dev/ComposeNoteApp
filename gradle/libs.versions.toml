@@ -35,6 +35,8 @@ com-google-devtools-ksp = "1.8.10-1.0.9"
 
 org-jetbrains-kotlin-android = "1.8.10"
 
+compose-keyboard-state = "1.5.0"
+
 
 
 [plugins]
@@ -45,8 +47,8 @@ dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "com-google
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "com-google-devtools-ksp" }
 
 [libraries]
-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
@@ -54,6 +56,7 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
 foundation-compose = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+compose-keyboard-state = { module = "tech.thdev:extensions-compose-keyboard-state", version.ref = "compose-keyboard-state" }
 ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -98,6 +101,7 @@ compose = [
     "androidx-lifecycle-viewmodel-ktx",
     "foundation-compose",
     "lifecycle-runtime-compose",
+    "compose-keyboard-state"
 ]
 test = [
     "junit"
