@@ -17,7 +17,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.season.winter.composenoteapp.features.main.compose.MainActivityScreen
+import com.season.winter.feature.main.compose.MainActivityScreen
+import com.season.winter.feature.main.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import tech.thdev.compose.extensions.keyboard.state.MutableExKeyboardStateSource
 import tech.thdev.compose.extensions.keyboard.state.foundation.removeFocusWhenKeyboardIsHidden

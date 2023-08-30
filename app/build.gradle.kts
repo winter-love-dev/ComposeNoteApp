@@ -9,7 +9,6 @@ plugins {
 
 android {
     namespace = "com.season.winter.composenoteapp"
-//    compileSdk = 33
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -45,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerExtensionVersion.get()
     }
     packaging {
         resources {
@@ -55,6 +54,12 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":core:common"))
+    implementation(project(":core:data"))
+    implementation(project(":core:design:ui"))
+    implementation(project(":core:domain"))
+    implementation(project(":feature:main"))
 
     implementation(libs.bundles.default)
     implementation(libs.bundles.default.components)

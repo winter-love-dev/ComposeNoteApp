@@ -4,6 +4,7 @@ targetSdk = "34"
 compileSdk = "34"
 versionCode = "1"
 versionName = "1.0.0"
+kotlinCompilerExtensionVersion = "1.4.3"
 
 agp = "8.1.0"
 core-ktx = "1.10.1"
@@ -36,6 +37,8 @@ com-google-devtools-ksp = "1.8.10-1.0.9"
 org-jetbrains-kotlin-android = "1.8.10"
 
 compose-keyboard-state = "1.5.0"
+appcompat = "1.6.1"
+material = "1.9.0"
 
 
 
@@ -45,6 +48,7 @@ org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.re
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "org-jetbrains-kotlin-android" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "com-google-dagger-hilt-android-plugins" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "com-google-devtools-ksp" }
+com-android-library = { id = "com.android.library", version.ref = "agp" }
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -77,6 +81,8 @@ androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle-viewmodel-ktx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle-viewmodel-compose" }
 lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-runtime-compose" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
 default = [
