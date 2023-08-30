@@ -1,6 +1,6 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    alias(libs.plugins.com.android.application)
+    alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.devtools.ksp)
@@ -8,20 +8,14 @@ plugins {
 }
 
 android {
-    namespace = "com.season.winter.composenoteapp"
+    namespace = "com.season.winter.feature.main"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.season.winter.composenoteapp"
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = libs.versions.versionCode.get().toInt()
-        versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -46,20 +40,13 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerExtensionVersion.get()
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+
 }
 
 dependencies {
 
-    implementation(project(":core:common"))
-    implementation(project(":core:data:main"))
     implementation(project(":core:design:ui"))
     implementation(project(":core:domain:main"))
-    implementation(project(":feature:main"))
 
     implementation(libs.bundles.default)
     implementation(libs.bundles.default.components)
@@ -82,8 +69,4 @@ dependencies {
     annotationProcessor(libs.bundles.room.compiler.annotationProcessor)
     testImplementation(libs.bundles.room.testing.testImplementation)
     implementation(libs.bundles.room)
-}
-
-kapt {
-    correctErrorTypes = true
 }
