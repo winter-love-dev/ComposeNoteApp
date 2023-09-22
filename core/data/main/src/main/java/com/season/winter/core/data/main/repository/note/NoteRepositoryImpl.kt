@@ -5,8 +5,10 @@ import com.season.winter.core.data.main.database.note.NoteDatabaseDao
 import com.season.winter.core.data.main.database.note.NoteEntity
 import com.season.winter.core.main.NoteRepository
 import com.season.winter.core.main.model.NoteInfoEntity
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
@@ -14,10 +16,13 @@ class NoteRepositoryImpl @Inject constructor(
     private val noteDatabaseDao: NoteDatabaseDao,
 ): NoteRepository {
 
+    fun log(msg: String) =
+        Log.w("Thread log", "${msg}: [${Thread.currentThread()}]")
+
     override fun flowNotes(): Flow<List<NoteInfoEntity>> =
         noteDatabaseDao.getNotes()
             .onEach {
-                Log.w("TEMP", "aaa ${Thread.currentThread()}")
+                log("1")
             }
             .map {
                 it.map {
