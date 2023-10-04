@@ -41,7 +41,7 @@ All library info : [libs.versions.toml](gradle/libs.versions.toml)
 
 # Architecture
 
-## Compose UI Programming referring [Unidirectional data flow document Pattern](https://developer.android.com/jetpack/compose/architecture#udf).
+## Compose UI Programming, Reference by [Unidirectional data flow document Pattern](https://developer.android.com/jetpack/compose/architecture#udf).
 ![state-unidirectional-flow](https://github.com/winter-love-dev/ComposeNoteApp/assets/26156815/9c96df0f-14db-4c53-a5ff-0d7337259dae)
 
 ## MVVM Design pattern with Dependency Injection, Reference by [App Arhitecture Guide](https://developer.android.com/jetpack/guide?hl=ko#mobile-app-ux)  
