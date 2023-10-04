@@ -13,7 +13,7 @@ I have already completed the ['DevFest 2021 Android Jetpack Compose'](https://gi
 
 | Writing Note | Editing Note | Delete Note |
 | :---------------: | :---------------: | :---------------: |
-| <img src="https://github.com/winter-love-dev/ComposeNoteApp/assets/26156815/fd62e001-2a2b-4a6b-bafd-99789ba9bb13" align="center" width="300px"/> | <img src="https://github.com/winter-love-dev/ComposeNoteApp/assets/26156815/4e0feb14-efa7-41bf-b498-f8a31a053c0c" align="center" width="300px"/> | <img src="https://github.com/winter-love-dev/ComposeNoteApp/assets/26156815/38a9543e-66b2-4c18-b3dc-bd39523f99c8" align="center" width="300px"/> |
+| <img src="https://github.com/winter-love-dev/ComposeNoteApp/assets/26156815/fd62e001-2a2b-4a6b-bafd-99789ba9bb13" align="center" width="250px"/> | <img src="https://github.com/winter-love-dev/ComposeNoteApp/assets/26156815/4e0feb14-efa7-41bf-b498-f8a31a053c0c" align="center" width="250px"/> | <img src="https://github.com/winter-love-dev/ComposeNoteApp/assets/26156815/38a9543e-66b2-4c18-b3dc-bd39523f99c8" align="center" width="250px"/> |
 
 </div>
 
