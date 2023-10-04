@@ -34,6 +34,8 @@ All library info : [libs.versions.toml](gradle/libs.versions.toml)
     - Focused on implementing functionality by leveraging SQLite wrapped in an abstraction layer, and combined 'Flow' to implement UI interaction more easily.
   - <b>Compose</b>
     - Programming in ‘Custom UI Component’ units
+    - ‘Custom UI component’ that emits events based on higher-order functions
+    - Implement a UI testable screen by separating @Composable functions
 
 ---
 
