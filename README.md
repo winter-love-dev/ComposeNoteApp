@@ -17,6 +17,11 @@ I have already completed the ['DevFest 2021 Android Jetpack Compose'](https://gi
 
 </div>
 
+App Layout Reference by [Google Keep](https://keep.google.com/)
+</br>
+</br>
+
+
 ## Tech Stack
 
 <p align="left">
@@ -44,8 +49,8 @@ All library info : [libs.versions.toml](gradle/libs.versions.toml)
 ## Compose UI Programming, Reference by [Unidirectional data flow document Pattern](https://developer.android.com/jetpack/compose/architecture#udf).
 ![state-unidirectional-flow](https://github.com/winter-love-dev/ComposeNoteApp/assets/26156815/9c96df0f-14db-4c53-a5ff-0d7337259dae)
 
-## MVVM Design pattern with Dependency Injection, Reference by [App Arhitecture Guide](https://developer.android.com/jetpack/guide?hl=ko#mobile-app-ux)  
-![mvvm_example](https://github.com/winter-love-dev/CatchBottle/assets/26156815/f61d9746-f375-4cfa-80ea-20a3cb0ceafb)
+## MVVM Design pattern with Dependency Injection, Reference by [App Arhitecture Guide](https://developer.android.com/topic/architecture)  
+<img width="551" alt="compose_mvvm" src="https://github.com/winter-love-dev/ComposeNoteApp/assets/26156815/b9c996b3-be27-438e-a952-289990574a5c">
 
 ## Multi Module Architecture, Reference by [android/nowinandroid](https://github.com/android/nowinandroid)
 ![dep_graph_app](https://github.com/winter-love-dev/CatchBottle/assets/26156815/22cdd95a-29ee-4ea6-be8e-fe42ffeae5a2)
